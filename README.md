@@ -35,6 +35,7 @@ boring projects:
 
 -   [Choose a License](http://choosealicense.com/)
 -   [Contributing](http://contributing.appspot.com)
+-   [Contributor Covenant](http://contributor-covenant.org/)
 -   [Creative Commons](https://creativecommons.org/choose/)
 -   [Keep a Changelog](http://keepachangelog.com/)
 -   [Mozilla TLS
@@ -43,4 +44,3 @@ boring projects:
 -   Sharipov Ruslan's [All Coding Style
     Guides](https://github.com/sharipov-ru/all-coding-style-guides)
 -   [Shields.io](http://shields.io/)
-

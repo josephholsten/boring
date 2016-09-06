@@ -1,0 +1,335 @@
+# ejabberd.yml - base config for ejabberd XMPP server
+#   This file is written by config management:
+#        ANY CHANGES WILL BE OVERWRITTEN
+
+# This file includes all ejabberd default options values in comments.
+# Non-default settings should explain why they are made, ideally
+# including business value and ticket number. This file is not the
+# place to document what any particular option does. Documentation
+# for all options lives at http://docs.ejabberd.im/admin/guide/configuration/
+
+# max_fsm_queue: undefined
+max_fsm_queue: 1000 # ejabberd recomendation
+# default_db: mnesia
+# domain_balancing: random
+# domain_balancing_component_number: undefined
+# domain_certfile: undefined
+# language: en
+# registration_timeout: 600
+# watchdog_admins: []
+# watchdog_large_heap: 1000000
+
+## Logging ##
+# loglevel: 4
+# log_rotate_date: ""
+# log_rotate_size: 10485760 # 10 * 1024 * 1024
+log_rotate_size: 0 # disable internal log rotation
+# log_rotate_count: 1
+# log_rate_limit: 100
+
+## S2S ##
+# route_subdomains: s2s
+# s2s_access: s2s
+# s2s_max_retry_delay: 300000 # 5 min
+# s2s_dns_timeout: 10
+# s2s_dns_retries: 2
+# outgoing_s2s_port: 5269
+# outgoing_s2s_families: ["ipv4", "ipv6"]
+outgoing_s2s_families:
+  - ipv6 # prefer modernity
+  - ipv4
+# outgoing_s2s_timeout: 10000
+# s2s_use_starttls: false # ejabberd default
+# s2s_use_starttls: optional # debian default
+s2s_use_starttls: required_trusted # only accept most trusted
+# s2s_tls_compression: true
+# s2s_certfile: undefined
+s2s_certfile: "/etc/ejabberd/ejabberd.pem"
+# s2s_ciphers: undefined
+# s2s_protocol_options: ["no_sslv2"] # ejabberd default
+# s2s_protocol_options: ["no_sslv3"] # debian default
+s2s_protocol_options:
+  - "no_sslv2"
+  - "no_sslv3" # http://disablessl3.com/
+
+## C2S ##
+# resource_conflict: closeold
+
+## Authentication ##
+# auth_method: internal
+# fqdn: undefined
+# disable_sasl_mechanisms: []
+# auth_password_format: plain
+auth_password_format: scram # avoid plaintext password storage
+
+## Captcha ##
+# captcha_cmd: "/lib/ejabberd/priv/bin/captcha.sh"
+# captcha_host: "example.org:5280"
+# captcha_limit: 5
+
+## Listening Ports ##
+listen:
+  - port: 5222
+    ip: "::"
+    module: ejabberd_c2s
+    # access: all
+    access: c2s
+    # max_ack_queue: 500
+    # max_fsm_queue: ${max_fsm_queue}
+    # max_stanza_size: infinity
+    max_stanza_size: 65536 # ejabberd c2s recomendation
+    # resend_on_timeout: false
+    # resume_timeout: 300
+    # shaper: none
+    shaper: c2s_shaper
+    # stream_management: true
+    # zlib: false
+    zlib: true # compress when reasonable
+    # certfile: undefined
+    # ciphers: undefined
+    # protocol_options: ["no_sslv2"] # ejabberd default
+    # protocol_options: ["no_sslv3"] # debian default
+    protocol_options:
+      - "no_sslv2"
+      - "no_sslv3" # http://disablessl3.com/
+    # starttls: false # ejabberd default
+    # starttls: true # debian default
+    # starttls_required: false
+    starttls_required: true
+    # tls_compression: true
+    # tls: false # deprecated
+  - port: 5269
+    ip: "::"
+    module: ejabberd_s2s_in
+    # max_stanza_size: infinity
+    max_stanza_size: 131072 # ejabberd s2s recomendation
+    # shaper: none
+    # tls_compression: true
+  - port: 5280
+    ip: "::"
+    module: ejabberd_http
+    # captcha: false
+    captcha: true
+    # http_bind: false
+    http_bind: true
+    # web_admin: false
+    web_admin: true
+    # default_host: undefined
+    # request_handlers: {}
+    # trusted_proxies: ["127.0.0.1"]
+    # certfile: undefined
+    # tls_compression: true
+    # tls: false # deprecated
+    # http_poll: false # deprecated
+
+## Traffic Shapers ##
+shaper:
+  # none: infinity
+  normal: 1000
+  fast: 50000
+
+## Access Groups ##
+acl:
+  # all: all
+  # none: []
+  admin:
+    user:
+      - "": "localhost"
+  local:
+    user_regexp: ""
+  loopback:
+    ip:
+      - "127.0.0.0/8"
+  blocked: []
+
+## Access Rules ##
+access:
+  # all: { all: allow }
+  # none: { all: deny }
+  max_user_sessions:
+    all: 10
+  # max_s2s_connections: {}
+  max_user_offline_messages:
+    admin: 5000
+    all: 100
+  c2s:
+    blocked: deny
+    all: allow
+  c2s_shaper:
+    admin: none
+    all: normal
+  s2s_shaper:
+    all: fast
+  announce:
+    admin: allow
+  configure:
+    admin: allow
+  muc_admin:
+    admin: allow
+  muc_create:
+    local: allow
+  muc:
+    all: allow
+  pubsub_createnode:
+    local: allow
+  register:
+    all: allow
+  trusted_network:
+    loopback: allow
+
+
+## Modules ##
+modules:
+  mod_adhoc: {}
+  mod_blocking: {}
+  mod_caps: {}
+  mod_carboncopy: {}
+  mod_configure: {}
+
+  mod_client_state: {}
+    # drop_chat_states: false
+    # queue_presence: false
+  mod_disco: {}
+    # extra_domains: []
+    # iqdisc: one_queue
+    # server_info: []
+  mod_http_bind: {}
+    # max_inactivity: 30
+  mod_last: {}
+    # db_type: ${default_db}
+    # iqdisc: one_queue
+  mod_offline: {}
+    # access_max_user_messages: max_user_offline_messages
+    # db_type: ${default_db}
+    # pool_size: 16
+    # store_empty_body: true
+  mod_ping: {}
+    # ping_interval: 60
+    # send_pings: false
+    # timeout_action: none
+  mod_privacy: {}
+    # db_type: ${default_db}
+    # iqdisc: one_queue
+  mod_private: {}
+    # db_type: ${default_db}
+    # iqdisc: one_queue
+  mod_roster: {}
+    # access: all
+    # db_type: ${default_db}
+    # iqdisc: one_queue
+    # managers: []
+    # store_current_id: false
+    # versioning: false
+  mod_shared_roster: {}
+    # db_type: ${default_db}
+  mod_stats: {}
+    # iqdisc: one_queue
+  mod_time: {}
+    # iqdisc: one_queue
+  mod_vcard: {}
+    # allow_return_all: false
+    # db_type: ${default_db}
+    # host: "vjud.@HOST@"
+    # iqdisc: one_queue
+    # matches: 30
+    # search: true
+    # search_all_hosts: true
+  mod_version: {}
+    # iqdisc: one_queue
+    # show_os: true
+
+  mod_announce:
+    # access: none
+    access: admin
+    # db-type: ${default_db}
+  mod_pubsub:
+    # access_createnode: all
+    access_createnode: local
+    # plugins: ["flat"]
+    plugins:
+      - "flat"
+      - "hometree"
+      - "pep"
+    # ignore_pep_from_offline: true
+    ignore_pep_from_offline: false # XEP-0163 compliance
+    # host: "pubsub.@HOST@"
+    # last_item_cache: false
+    # max_items_node: 10
+    # nodetree: tree
+    # pep_mapping: {}
+  mod_register:
+    # access: all
+    access: register
+    # ip_access: all
+    ip_access: loopback
+    # password_strength: 0
+    password_strength: 32
+    welcome_message:
+      # subject: ""
+      subject: "Welcome!"
+      # body: ""
+      body: |-
+        Hi.
+        Welcome to this XMPP server.
+    # access_from: none
+    # captcha_protected: false
+    # iqdisc: one_queue
+    # registration_watchers: []
+  mod_irc:
+    # default_encoding: iso8859-1
+    default_encoding: utf-8 # support full unicode
+    # access: all
+    # db_type: ${default_db}
+    # host: "irc.@HOST@"
+  mod_muc:
+    # access: all
+    access: muc
+    # access_create: all
+    access_create: muc_create
+    # access_persistent: all
+    access_persistent: muc_create
+    # access_admin: none
+    access_admin: muc_admin
+    # min_message_interval: 0.0
+    min_message_interval: 0.4 # ejabberd recomendation
+    # min_presence_interval: 0.0
+    min_presence_interval: 4.0 # ejabberd recomendation
+    # db_type: ${default_db}
+    # history_size: 20
+    # host: "conference.@HOST@"
+    # max_room_desc: infinity
+    # max_room_id: infinity
+    # max_user_conferences: 10
+    # max_users: 200
+    # max_users_admin_threshold: 5
+    # default_room_options:
+    #   allow_change_subj: true
+    #   allow_private_messages: true
+    #   allow_private_messages_from_visitors: anyone
+    #   allow_query_users: true
+    #   allow_user_invites: false
+    #   allow_visitor_nickchange: true
+    #   allow_visitor_status: true
+    #   anonymous: true
+    #   captcha_protected: false
+    #   logging: false
+    #   max_users: 200
+    #   members_by_default: true
+    #   members_only: false
+    #   moderated: true
+    #   password: roompass123
+    #   password_protected: false
+    #   persistent: false
+    #   public: true
+    #   public_list: true
+    #   title: "Room Title"
+
+## Served Hostnames ##
+hosts:
+  - "localhost"
+
+host_config:
+  "localhost":
+    domain_certfile: "/etc/ssl/certs/localhost.pem"
+
+# vi: ft=yaml ts=8

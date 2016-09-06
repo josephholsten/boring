@@ -1,10 +1,17 @@
 # The Most Boring Project Config
 
-As a systems administrator, I'm not excited by exciting. I'm not moved by novel. What really catches my eye is the tried-and-true, worked-just-fine-for-my-grandparents, by-the-book, or merely **boring**.
+As a systems administrator, I'm not excited by exciting. I'm not moved
+by novel. What really catches my eye is the tried-and-true,
+worked-just-fine-for-my-grandparents, by-the-book, or merely **boring**.
 
-This repository collects all the best examples of boring that can be found. Sometimes that means minimalist, sometimes that means boilerplate. Often it won't include the newest features. But it absolutely should contain examples of the features used by 95% of people, in the way those people will usually expect.
+This repository collects all the best examples of boring that can be
+found. Sometimes that means minimalist, sometimes that means
+boilerplate. Often it won't include the newest features. But it
+absolutely should contain examples of the features used by 95% of
+people, in the way those people will usually expect.
 
-For example, out CONTRIBUTING.md is the result of believing every project should have Contributing guidelines for how to:
+For example, out CONTRIBUTING.md is the result of believing every
+project should have Contributing guidelines for how to:
 
 -   find the permanent home of your contributing info via
     http://contributing.appspot.com
@@ -41,6 +48,7 @@ boring projects:
 -   [Contributing](http://contributing.appspot.com)
 -   [Contributor Covenant](http://contributor-covenant.org/)
 -   [Creative Commons](https://creativecommons.org/choose/)
+-   [Flint](https://github.com/pengwynn/flint)
 -   [Keep a Changelog](http://keepachangelog.com/)
 -   [Mozilla TLS
     Recomendations](https://wiki.mozilla.org/Security/Server_Side_TLS)
@@ -48,3 +56,4 @@ boring projects:
 -   Sharipov Ruslan's [All Coding Style
     Guides](https://github.com/sharipov-ru/all-coding-style-guides)
 -   [Shields.io](http://shields.io/)
+

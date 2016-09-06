@@ -1,6 +1,10 @@
 # The Most Boring Project Config
 
-Because every project should have Contributing guidelines for how to:
+As a systems administrator, I'm not excited by exciting. I'm not moved by novel. What really catches my eye is the tried-and-true, worked-just-fine-for-my-grandparents, by-the-book, or merely **boring**.
+
+This repository collects all the best examples of boring that can be found. Sometimes that means minimalist, sometimes that means boilerplate. Often it won't include the newest features. But it absolutely should contain examples of the features used by 95% of people, in the way those people will usually expect.
+
+For example, out CONTRIBUTING.md is the result of believing every project should have Contributing guidelines for how to:
 
 -   find the permanent home of your contributing info via
     http://contributing.appspot.com
